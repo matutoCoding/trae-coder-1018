@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>景德镇瓷器制作管理系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">瓷</div>
+                <div class="logo-text">
+                    <h1>景德镇瓷器制作管理系统</h1>
+                    <p>千年窑火 · 匠心传承</p>
+                </div>
+            </div>
+            <div class="header-info">
+                <span class="date" id="currentDate"></span>
+                <span class="batch-info">当前批次: <strong id="currentBatch">JCG-2026-001</strong></span>
+            </div>
+        </header>
+
+        <nav class="navigation">
+            <ul class="nav-tabs">
+                <li class="nav-tab active" data-page="material">
+                    <span class="nav-icon">土</span>
+                    <span class="nav-text">泥料管理</span>
+                </li>
+                <li class="nav-tab" data-page="forming">
+                    <span class="nav-icon">轮</span>
+                    <span class="nav-text">成型记录</span>
+                </li>
+                <li class="nav-tab" data-page="decorating">
+                    <span class="nav-icon">青</span>
+                    <span class="nav-text">施釉装饰</span>
+                </li>
+                <li class="nav-tab" data-page="firing">
+                    <span class="nav-icon">窑</span>
+                    <span class="nav-text">装窑烧成</span>
+                </li>
+                <li class="nav-tab" data-page="inspection">
+                    <span class="nav-icon">检</span>
+                    <span class="nav-text">成品检验</span>
+                </li>
+                <li class="nav-tab" data-page="order">
+                    <span class="nav-icon">订</span>
+                    <span class="nav-text">定制订单</span>
+                </li>
+                <li class="nav-tab" data-page="sales">
+                    <span class="nav-icon">溯</span>
+                    <span class="nav-text">销售溯源</span>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <section id="material" class="page active">
+                <div class="page-header">
+                    <h2>泥料管理</h2>
+                    <p>高岭土瓷泥登记 · 配料记录 · 陈腐管理</p>
+                </div>
+                
+                <div class="content-grid">
+                    <div class="card form-card">
+                        <h3>瓷泥登记</h3>
+                        <form id="materialForm">
+                            <div class="form-row">
+                                <label>泥料编号</label>
+                                <input type="text" id="materialId" placeholder="NL-2026-001" required>
+                            </div>
+                            <div class="form-row">
+                                <label>泥料名称</label>
+                                <select id="materialName" required>
+                                    <option value="">请选择</option>
+                                    <option value="高岭土">高岭土</option>
+                                    <option value="瓷石">瓷石</option>
+                                    <option value="紫金土">紫金土</option>
+                                    <option value="麻仓土">麻仓土</option>
+                                    <option value="釉果">釉果</option>
+                                    <option value="复合泥">复合泥料</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>产地来源</label>
+                                <input type="text" id="materialOrigin" placeholder="如：景德镇高岭村" required>
+                            </div>
+                            <div class="form-row">
+                                <label>入库数量</label>
+                                <input type="number" id="materialWeight" placeholder="单位：公斤" step="0.1" required>
+                            </div>
+                            <div class="form-row">
+                                <label>含水率</label>
+                                <input type="number" id="moisture" placeholder="如：22" step="0.1">
+                                <span class="unit">%</span>
+                            </div>
+                            <div class="form-row">
+                                <label>陈腐天数</label>
+                                <input type="number" id="agingDays" placeholder="建议：15-30天">
+                                <span class="unit">天</span>
+                            </div>
+                            <div class="form-row">
+                                <label>备注</label>
+                                <textarea id="materialRemark" rows="2" placeholder="泥料特性、用途等"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">登记入库</button>
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card list-card">
+                        <h3>泥料库存</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>名称</th>
+                                        <th>产地</th>
+                                        <th>库存(kg)</th>
+                                        <th>含水率</th>
+                                        <th>陈腐期</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="materialList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card info-card">
+                        <h3>泥料知识</h3>
+                        <div class="info-content">
+                            <div class="info-item">
+                                <span class="info-label">高岭土</span>
+                                <p>主要矿物成分为高岭石，因江西景德镇高岭村而得名。具有白度高、质软、吸水性强等特点，是瓷器的主要原料。</p>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">瓷石</span>
+                                <p>一种含石英、绢云母的硅酸盐岩石，可单独制瓷，是景德镇传统二元配方的重要组成部分。</p>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">陈腐工艺</span>
+                                <p>将练制好的泥料放置在阴暗潮湿处陈腐，可使泥料中的水分均匀分布，提高可塑性，减少烧成变形。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="forming" class="page">
+                <div class="page-header">
+                    <h2>成型记录</h2>
+                    <p>拉坯利坯成型 · 器型设计 · 干燥记录</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card form-card">
+                        <h3>成型登记</h3>
+                        <form id="formingForm">
+                            <div class="form-row">
+                                <label>成型编号</label>
+                                <input type="text" id="formingId" placeholder="CX-2026-001" required>
+                            </div>
+                            <div class="form-row">
+                                <label>器型名称</label>
+                                <select id="vesselType" required>
+                                    <option value="">请选择器型</option>
+                                    <option value="梅瓶">梅瓶</option>
+                                    <option value="玉壶春">玉壶春</option>
+                                    <option value="天球瓶">天球瓶</option>
+                                    <option value="葫芦瓶">葫芦瓶</option>
+                                    <option value="将军罐">将军罐</option>
+                                    <option value="笔筒">笔筒</option>
+                                    <option value="盖碗">盖碗</option>
+                                    <option value="公道杯">公道杯</option>
+                                    <option value="品茗杯">品茗杯</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>使用泥料</label>
+                                <select id="formingMaterial" required>
+                                    <option value="">请选择泥料</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>成型工艺</label>
+                                <select id="formingMethod" required>
+                                    <option value="">请选择工艺</option>
+                                    <option value="手工拉坯">手工拉坯</option>
+                                    <option value="利坯">利坯</option>
+                                    <option value="印坯">印坯</option>
+                                    <option value="注浆">注浆成型</option>
+                                    <option value="捏塑">捏塑成型</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>匠人</label>
+                                <input type="text" id="artisan" placeholder="匠人姓名" required>
+                            </div>
+                            <div class="form-row">
+                                <label>数量</label>
+                                <input type="number" id="formingQuantity" placeholder="成型数量" min="1" required>
+                                <span class="unit">件</span>
+                            </div>
+                            <div class="form-row">
+                                <label>尺寸(高×口径)</label>
+                                <div class="input-group">
+                                    <input type="number" id="height" placeholder="高" step="0.1">
+                                    <span class="sep">×</span>
+                                    <input type="number" id="diameter" placeholder="口径" step="0.1">
+                                    <span class="unit">cm</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>重量</label>
+                                <input type="number" id="formingWeight" placeholder="单件重量" step="0.1">
+                                <span class="unit">g</span>
+                            </div>
+                            <div class="form-row">
+                                <label>干燥方式</label>
+                                <select id="dryingMethod">
+                                    <option value="自然阴干">自然阴干</option>
+                                    <option value="恒温干燥">恒温干燥</option>
+                                    <option value="日光干燥">日光干燥</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>干燥天数</label>
+                                <input type="number" id="dryingDays" placeholder="建议：7-14天">
+                                <span class="unit">天</span>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">记录成型</button>
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card list-card">
+                        <h3>成型记录</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>器型</th>
+                                        <th>工艺</th>
+                                        <th>匠人</th>
+                                        <th>数量</th>
+                                        <th>尺寸</th>
+                                        <th>干燥</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="formingList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card info-card">
+                        <h3>成型工艺</h3>
+                        <div class="info-content">
+                            <div class="info-item">
+                                <span class="info-label">手工拉坯</span>
+                                <p>最古老的成型方法，匠人在转动的辘轳车上，用双手将泥料拉制成型。要求匠人具备极高的技艺水平。</p>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">利坯</span>
+                                <p>拉坯的半成品干燥到一定程度后，置于辘轳车上，用利坯刀旋削修整，使器型规整、厚薄均匀。</p>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">印坯</span>
+                                <p>将泥料按压在模具上成型的方法，适用于制作形状复杂或需要批量生产的器物。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="decorating" class="page">
+                <div class="page-header">
+                    <h2>施釉装饰</h2>
+                    <p>青花釉里红装饰 · 施釉工艺 · 款识落款</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card form-card">
+                        <h3>装饰登记</h3>
+                        <form id="decoratingForm">
+                            <div class="form-row">
+                                <label>装饰编号</label>
+                                <input type="text" id="decoratingId" placeholder="ZS-2026-001" required>
+                            </div>
+                            <div class="form-row">
+                                <label>关联成型记录</label>
+                                <select id="linkForming" required>
+                                    <option value="">请选择成型坯体</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>装饰工艺</label>
+                                <select id="decorateMethod" required>
+                                    <option value="">请选择工艺</option>
+                                    <option value="青花">青花</option>
+                                    <option value="釉里红">釉里红</option>
+                                    <option value="青花釉里红">青花釉里红</option>
+                                    <option value="粉彩">粉彩</option>
+                                    <option value="五彩">五彩</option>
+                                    <option value="斗彩">斗彩</option>
+                                    <option value="珐琅彩">珐琅彩</option>
+                                    <option value="刻花">刻花</option>
+                                    <option value="划花">划花</option>
+                                    <option value="印花">印花</option>
+                                    <option value="素面">素面无纹</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>纹饰图案</label>
+                                <input type="text" id="pattern" placeholder="如：缠枝莲、山水、人物、龙凤等">
+                            </div>
+                            <div class="form-row">
+                                <label>画师</label>
+                                <input type="text" id="painter" placeholder="画师姓名" required>
+                            </div>
+                            <div class="form-row">
+                                <label>釉料种类</label>
+                                <select id="glazeType" required>
+                                    <option value="">请选择釉料</option>
+                                    <option value="透明釉">透明釉</option>
+                                    <option value="白釉">白釉</option>
+                                    <option value="影青釉">影青釉</option>
+                                    <option value="霁蓝釉">霁蓝釉</option>
+                                    <option value="霁红釉">霁红釉</option>
+                                    <option value="郎窑红">郎窑红</option>
+                                    <option value="钧釉">钧釉</option>
+                                    <option value="哥釉">哥釉</option>
+                                    <option value="汝釉">汝釉</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>施釉方法</label>
+                                <select id="glazeMethod">
+                                    <option value="浸釉">浸釉</option>
+                                    <option value="喷釉">喷釉</option>
+                                    <option value="刷釉">刷釉</option>
+                                    <option value="浇釉">浇釉</option>
+                                    <option value="吹釉">吹釉</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>釉层厚度</label>
+                                <input type="number" id="glazeThickness" placeholder="如：1.5" step="0.1">
+                                <span class="unit">mm</span>
+                            </div>
+                            <div class="form-row">
+                                <label>款识落款</label>
+                                <div class="input-group">
+                                    <select id="markType">
+                                        <option value="无款">无款</option>
+                                        <option value="年号款">年号款</option>
+                                        <option value="堂名款">堂名款</option>
+                                        <option value="人名款">人名款</option>
+                                        <option value="吉言款">吉言款</option>
+                                        <option value="图案款">图案款</option>
+                                    </select>
+                                    <input type="text" id="markContent" placeholder="款识内容">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>落款位置</label>
+                                <select id="markPosition">
+                                    <option value="底足">底足</option>
+                                    <option value="口沿">口沿</option>
+                                    <option value="器身">器身</option>
+                                    <option value="肩部">肩部</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">记录装饰</button>
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card list-card">
+                        <h3>装饰记录</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>器型</th>
+                                        <th>工艺</th>
+                                        <th>纹饰</th>
+                                        <th>画师</th>
+                                        <th>釉料</th>
+                                        <th>款识</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="decoratingList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card info-card">
+                        <h3>装饰工艺</h3>
+                        <div class="info-content">
+                            <div class="info-item">
+                                <span class="info-label">青花</span>
+                                <p>用钴料在瓷胎上绘画，再施透明釉，经1300℃左右高温一次烧成的釉下彩。色彩稳定，永不褪色。</p>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">釉里红</span>
+                                <p>用铜红料在胎上绘画，施釉后高温烧成。由于铜红料对烧成气氛要求极高，成品率极低，尤为珍贵。</p>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">青花釉里红</span>
+                                <p>将青花与釉里红两种釉下彩相结合的装饰工艺，蓝色与红色相互映衬，富丽堂皇，烧制难度极大。</p>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">款识</span>
+                                <p>在瓷器底部或其他部位书写的文字或图案，用以标明年代、产地、窑口、制作者或使用者等信息。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="firing" class="page">
+                <div class="page-header">
+                    <h2>装窑烧成</h2>
+                    <p>匣钵装窑 · 柴窑气窑烧成 · 温度曲线控制</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card form-card">
+                        <h3>装窑登记</h3>
+                        <form id="firingForm">
+                            <div class="form-row">
+                                <label>窑次编号</label>
+                                <input type="text" id="firingId" placeholder="YS-2026-001" required>
+                            </div>
+                            <div class="form-row">
+                                <label>窑炉类型</label>
+                                <select id="kilnType" required>
+                                    <option value="">请选择窑炉</option>
+                                    <option value="柴窑">柴窑</option>
+                                    <option value="气窑">气窑</option>
+                                    <option value="电窑">电窑</option>
+                                    <option value="柴烧">柴烧裸烧</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>窑炉编号</label>
+                                <input type="text" id="kilnNo" placeholder="如：一号柴窑">
+                            </div>
+                            <div class="form-row">
+                                <label>匣钵类型</label>
+                                <select id="saggarType">
+                                    <option value="瓷质匣钵">瓷质匣钵</option>
+                                    <option value="耐火泥匣钵">耐火泥匣钵</option>
+                                    <option value="碳化硅匣钵">碳化硅匣钵</option>
+                                    <option value="裸烧">裸烧（无匣钵）</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>装窑位置</label>
+                                <select id="kilnPosition">
+                                    <option value="窑顶">窑顶</option>
+                                    <option value="上膛">上膛</option>
+                                    <option value="中膛">中膛</option>
+                                    <option value="下膛">下膛</option>
+                                    <option value="窑门">窑门</option>
+                                    <option value="窑尾">窑尾</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>装坯数量</label>
+                                <input type="number" id="loadQuantity" placeholder="装窑件数" min="1" required>
+                                <span class="unit">件</span>
+                            </div>
+                            <div class="form-row">
+                                <label>关联坯体</label>
+                                <div class="checkbox-group" id="linkDecorating">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>烧成气氛</label>
+                                <select id="atmosphere">
+                                    <option value="还原焰">还原焰</option>
+                                    <option value="氧化焰">氧化焰</option>
+                                    <option value="中性焰">中性焰</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>最高温度</label>
+                                <input type="number" id="maxTemp" placeholder="如：1320" step="1" required>
+                                <span class="unit">℃</span>
+                            </div>
+                            <div class="form-row">
+                                <label>预计烧造时间</label>
+                                <input type="number" id="firingHours" placeholder="柴窑约40-60小时" step="0.5">
+                                <span class="unit">小时</span>
+                            </div>
+                            <div class="form-row">
+                                <label>烧造师傅</label>
+                                <input type="text" id="fireMaster" placeholder="把桩师傅姓名" required>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">点火烧窑</button>
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card chart-card">
+                        <h3>烧成曲线</h3>
+                        <div class="chart-container">
+                            <canvas id="firingChart"></canvas>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #8B0000;"></span>
+                                <span>柴窑曲线</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #4682B4;"></span>
+                                <span>气窑曲线</span>
+                            </div>
+                        </div>
+                        <div class="firing-stages">
+                            <div class="stage-item">
+                                <span class="stage-temp">常温-300℃</span>
+                                <span class="stage-name">低温预热</span>
+                                <span class="stage-desc">排出残余水分</span>
+                            </div>
+                            <div class="stage-item">
+                                <span class="stage-temp">300-900℃</span>
+                                <span class="stage-name">氧化分解</span>
+                                <span class="stage-desc">有机物燃烧分解</span>
+                            </div>
+                            <div class="stage-item">
+                                <span class="stage-temp">900-1250℃</span>
+                                <span class="stage-name">高温烧成</span>
+                                <span class="stage-desc">瓷化反应阶段</span>
+                            </div>
+                            <div class="stage-item">
+                                <span class="stage-temp">1250-最高温</span>
+                                <span class="stage-name">保温阶段</span>
+                                <span class="stage-desc">均匀窑温</span>
+                            </div>
+                            <div class="stage-item">
+                                <span class="stage-temp">降温-开窑</span>
+                                <span class="stage-name">冷却出窑</span>
+                                <span class="stage-desc">缓慢降温防炸裂</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card list-card">
+                        <h3>窑次记录</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>窑次</th>
+                                        <th>窑型</th>
+                                        <th>装件数</th>
+                                        <th>最高温</th>
+                                        <th>烧成时间</th>
+                                        <th>把桩</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="firingList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="inspection" class="page">
+                <div class="page-header">
+                    <h2>成品检验</h2>
+                    <p>变形开裂检验 · 成品分级 · 质量评定</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card form-card">
+                        <h3>成品检验</h3>
+                        <form id="inspectionForm">
+                            <div class="form-row">
+                                <label>检验编号</label>
+                                <input type="text" id="inspectionId" placeholder="JY-2026-001" required>
+                            </div>
+                            <div class="form-row">
+                                <label>关联窑次</label>
+                                <select id="linkFiring" required>
+                                    <option value="">请选择窑次</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>产品编号</label>
+                                <input type="text" id="productId" placeholder="CP-2026-001" required>
+                            </div>
+                            <div class="form-row">
+                                <label>器型名称</label>
+                                <input type="text" id="inspectVessel" placeholder="自动填充" readonly>
+                            </div>
+                            <div class="form-row">
+                                <label>外观检验</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="变形">
+                                        <span>变形</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="开裂">
+                                        <span>开裂</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="缩釉">
+                                        <span>缩釉</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="针眼">
+                                        <span>针眼</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="气泡">
+                                        <span>气泡</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="色差">
+                                        <span>色差</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="落渣">
+                                        <span>落渣</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="青花晕散">
+                                        <span>青花晕散</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="釉里红飞红">
+                                        <span>釉里红飞红</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="defects" value="无缺陷">
+                                        <span>无缺陷</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>变形程度</label>
+                                <select id="deformationLevel">
+                                    <option value="无">无变形</option>
+                                    <option value="轻微">轻微（&lt;1mm）</option>
+                                    <option value="中度">中度（1-3mm）</option>
+                                    <option value="严重">严重（&gt;3mm）</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>尺寸测量</label>
+                                <div class="input-group">
+                                    <input type="number" id="actualHeight" placeholder="实际高度" step="0.1">
+                                    <span class="sep">×</span>
+                                    <input type="number" id="actualDiameter" placeholder="实际口径" step="0.1">
+                                    <span class="unit">cm</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>重量</label>
+                                <input type="number" id="actualWeight" placeholder="烧成后重量" step="0.1">
+                                <span class="unit">g</span>
+                            </div>
+                            <div class="form-row">
+                                <label>成品等级</label>
+                                <select id="productGrade" required>
+                                    <option value="">请评定等级</option>
+                                    <option value="珍品">珍品级（收藏级）</option>
+                                    <option value="精品">精品级（一等品）</option>
+                                    <option value="正品">正品级（二等品）</option>
+                                    <option value="次品">次品（三等品）</option>
+                                    <option value="废品">废品（不合格）</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>评估说明</label>
+                                <textarea id="inspectRemark" rows="3" placeholder="详细描述缺陷情况、艺术价值评估等"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label>检验员</label>
+                                <input type="text" id="inspector" placeholder="检验员姓名" required>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">记录检验</button>
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card stats-card">
+                        <h3>质量统计</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item grade-rare">
+                                <span class="stat-label">珍品级</span>
+                                <span class="stat-value" id="statRare">0</span>
+                                <span class="stat-unit">件</span>
+                            </div>
+                            <div class="stat-item grade-fine">
+                                <span class="stat-label">精品级</span>
+                                <span class="stat-value" id="statFine">0</span>
+                                <span class="stat-unit">件</span>
+                            </div>
+                            <div class="stat-item grade-normal">
+                                <span class="stat-label">正品级</span>
+                                <span class="stat-value" id="statNormal">0</span>
+                                <span class="stat-unit">件</span>
+                            </div>
+                            <div class="stat-item grade-defect">
+                                <span class="stat-label">次品</span>
+                                <span class="stat-value" id="statDefect">0</span>
+                                <span class="stat-unit">件</span>
+                            </div>
+                            <div class="stat-item grade-waste">
+                                <span class="stat-label">废品</span>
+                                <span class="stat-value" id="statWaste">0</span>
+                                <span class="stat-unit">件</span>
+                            </div>
+                            <div class="stat-item rate">
+                                <span class="stat-label">合格率</span>
+                                <span class="stat-value" id="statRate">0</span>
+                                <span class="stat-unit">%</span>
+                            </div>
+                        </div>
+                        <div class="defect-stats">
+                            <h4>缺陷分布</h4>
+                            <div class="defect-chart">
+                                <div class="defect-bar">
+                                    <span class="defect-name">变形</span>
+                                    <div class="bar-track">
+                                        <div class="bar-fill" id="barDeformation" style="width: 0%"></div>
+                                    </div>
+                                    <span class="defect-count" id="countDeformation">0</span>
+                                </div>
+                                <div class="defect-bar">
+                                    <span class="defect-name">开裂</span>
+                                    <div class="bar-track">
+                                        <div class="bar-fill" id="barCrack" style="width: 0%"></div>
+                                    </div>
+                                    <span class="defect-count" id="countCrack">0</span>
+                                </div>
+                                <div class="defect-bar">
+                                    <span class="defect-name">缩釉</span>
+                                    <div class="bar-track">
+                                        <div class="bar-fill" id="barGlaze" style="width: 0%"></div>
+                                    </div>
+                                    <span class="defect-count" id="countGlaze">0</span>
+                                </div>
+                                <div class="defect-bar">
+                                    <span class="defect-name">气泡</span>
+                                    <div class="bar-track">
+                                        <div class="bar-fill" id="barBubble" style="width: 0%"></div>
+                                    </div>
+                                    <span class="defect-count" id="countBubble">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card list-card">
+                        <h3>成品列表</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>产品编号</th>
+                                        <th>器型</th>
+                                        <th>缺陷</th>
+                                        <th>等级</th>
+                                        <th>检验员</th>
+                                        <th>日期</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inspectionList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="order" class="page">
+                <div class="page-header">
+                    <h2>定制订单</h2>
+                    <p>定制器型 · 客户需求 · 订单跟踪</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card form-card">
+                        <h3>新建订单</h3>
+                        <form id="orderForm">
+                            <div class="form-row">
+                                <label>订单编号</label>
+                                <input type="text" id="orderId" placeholder="DD-2026-001" required>
+                            </div>
+                            <div class="form-row">
+                                <label>客户姓名</label>
+                                <input type="text" id="customerName" placeholder="客户姓名" required>
+                            </div>
+                            <div class="form-row">
+                                <label>联系方式</label>
+                                <input type="text" id="customerPhone" placeholder="联系电话" required>
+                            </div>
+                            <div class="form-row">
+                                <label>定制类型</label>
+                                <select id="orderType" required>
+                                    <option value="">请选择类型</option>
+                                    <option value="器型定制">器型定制</option>
+                                    <option value="纹饰定制">纹饰定制</option>
+                                    <option value="款识定制">款识定制</option>
+                                    <option value="釉色定制">釉色定制</option>
+                                    <option value="全套定制">全套定制</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>定制器型</label>
+                                <select id="customVessel" required>
+                                    <option value="">请选择器型</option>
+                                    <option value="梅瓶">梅瓶</option>
+                                    <option value="玉壶春">玉壶春</option>
+                                    <option value="天球瓶">天球瓶</option>
+                                    <option value="赏瓶">赏瓶</option>
+                                    <option value="葫芦瓶">葫芦瓶</option>
+                                    <option value="象耳瓶">象耳瓶</option>
+                                    <option value="盖罐">盖罐</option>
+                                    <option value="将军罐">将军罐</option>
+                                    <option value="蒜头瓶">蒜头瓶</option>
+                                    <option value="贯耳瓶">贯耳瓶</option>
+                                    <option value="茶具套装">茶具套装</option>
+                                    <option value="文房四宝">文房四宝</option>
+                                    <option value="其他">其他（请在备注说明）</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>定制数量</label>
+                                <input type="number" id="orderQuantity" placeholder="定制件数" min="1" required>
+                                <span class="unit">件</span>
+                            </div>
+                            <div class="form-row">
+                                <label>尺寸要求</label>
+                                <div class="input-group">
+                                    <input type="number" id="customHeight" placeholder="高度" step="0.1">
+                                    <span class="sep">×</span>
+                                    <input type="number" id="customDiameter" placeholder="口径" step="0.1">
+                                    <span class="unit">cm</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>纹饰要求</label>
+                                <input type="text" id="customPattern" placeholder="如：青花缠枝莲、山水、人物肖像等">
+                            </div>
+                            <div class="form-row">
+                                <label>釉色要求</label>
+                                <select id="customGlaze">
+                                    <option value="">请选择釉色</option>
+                                    <option value="青花瓷">青花瓷</option>
+                                    <option value="釉里红">釉里红</option>
+                                    <option value="青花釉里红">青花釉里红</option>
+                                    <option value="粉彩">粉彩</option>
+                                    <option value="白釉">白釉</option>
+                                    <option value="影青釉">影青釉</option>
+                                    <option value="霁蓝釉">霁蓝釉</option>
+                                    <option value="霁红釉">霁红釉</option>
+                                    <option value="郎窑红">郎窑红</option>
+                                    <option value="钧窑釉">钧窑釉</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>款识要求</label>
+                                <div class="input-group">
+                                    <select id="customMarkType">
+                                        <option value="无">无款</option>
+                                        <option value="年号款">年号款</option>
+                                        <option value="堂名款">堂名款</option>
+                                        <option value="人名款">人名款</option>
+                                        <option value="吉言款">吉言款</option>
+                                        <option value="定制款">定制款</option>
+                                    </select>
+                                    <input type="text" id="customMark" placeholder="款识内容">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>烧制要求</label>
+                                <select id="customFiring">
+                                    <option value="柴窑">柴窑烧制</option>
+                                    <option value="气窑">气窑烧制</option>
+                                    <option value="电窑">电窑烧制</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>价格区间</label>
+                                <div class="input-group">
+                                    <input type="number" id="minPrice" placeholder="最低预算">
+                                    <span class="sep">-</span>
+                                    <input type="number" id="maxPrice" placeholder="最高预算">
+                                    <span class="unit">元</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>交付日期</label>
+                                <input type="date" id="deliveryDate" required>
+                            </div>
+                            <div class="form-row">
+                                <label>特殊要求</label>
+                                <textarea id="orderRemark" rows="4" placeholder="详细描述定制需求，如特殊用途、收藏、送礼、包装要求等"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label>定金</label>
+                                <input type="number" id="deposit" placeholder="已收定金金额">
+                                <span class="unit">元</span>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">创建订单</button>
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card list-card">
+                        <h3>订单列表</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>订单号</th>
+                                        <th>客户</th>
+                                        <th>定制内容</th>
+                                        <th>数量</th>
+                                        <th>交付日期</th>
+                                        <th>状态</th>
+                                        <th>进度</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card progress-card">
+                        <h3>订单进度跟踪</h3>
+                        <div class="progress-tracker" id="progressTracker">
+                            <div class="progress-step completed">
+                                <div class="step-icon">订</div>
+                                <div class="step-label">订单确认</div>
+                            </div>
+                            <div class="progress-line completed"></div>
+                            <div class="progress-step active">
+                                <div class="step-icon">土</div>
+                                <div class="step-label">泥料准备</div>
+                            </div>
+                            <div class="progress-line"></div>
+                            <div class="progress-step">
+                                <div class="step-icon">轮</div>
+                                <div class="step-label">成型制作</div>
+                            </div>
+                            <div class="progress-line"></div>
+                            <div class="progress-step">
+                                <div class="step-icon">青</div>
+                                <div class="step-label">装饰施釉</div>
+                            </div>
+                            <div class="progress-line"></div>
+                            <div class="progress-step">
+                                <div class="step-icon">窑</div>
+                                <div class="step-label">入窑烧制</div>
+                            </div>
+                            <div class="progress-line"></div>
+                            <div class="progress-step">
+                                <div class="step-icon">检</div>
+                                <div class="step-label">成品检验</div>
+                            </div>
+                            <div class="progress-line"></div>
+                            <div class="progress-step">
+                                <div class="step-icon">送</div>
+                                <div class="step-label">交付客户</div>
+                            </div>
+                        </div>
+                        <div class="order-detail" id="orderDetail">
+                            <p>请选择一个订单查看详细进度</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sales" class="page">
+                <div class="page-header">
+                    <h2>销售溯源</h2>
+                    <p>艺术陶瓷销售 · 批次溯源 · 工艺记录查询</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card trace-card">
+                        <h3>产品溯源查询</h3>
+                        <div class="trace-search">
+                            <input type="text" id="traceCode" placeholder="输入产品编号或扫描二维码">
+                            <button class="btn btn-primary" id="searchTrace">查询溯源</button>
+                        </div>
+                        <div class="trace-result" id="traceResult">
+                            <div class="trace-empty">
+                                <div class="trace-icon">瓷</div>
+                                <p>输入产品编号查询完整工艺溯源链</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card form-card">
+                        <h3>销售登记</h3>
+                        <form id="salesForm">
+                            <div class="form-row">
+                                <label>销售单号</label>
+                                <input type="text" id="salesId" placeholder="XS-2026-001" required>
+                            </div>
+                            <div class="form-row">
+                                <label>产品编号</label>
+                                <select id="salesProduct" required>
+                                    <option value="">请选择成品</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>产品信息</label>
+                                <div class="product-info" id="productInfo">
+                                    <p>请选择产品</p>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>客户姓名</label>
+                                <input type="text" id="salesCustomer" placeholder="客户姓名" required>
+                            </div>
+                            <div class="form-row">
+                                <label>客户类型</label>
+                                <select id="customerType">
+                                    <option value="个人收藏">个人收藏</option>
+                                    <option value="礼品馈赠">礼品馈赠</option>
+                                    <option value="企业采购">企业采购</option>
+                                    <option value="艺术品经销商">艺术品经销商</option>
+                                    <option value="博物馆">博物馆/美术馆</option>
+                                    <option value="海外客户">海外客户</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>销售价格</label>
+                                <input type="number" id="salesPrice" placeholder="成交价" required>
+                                <span class="unit">元</span>
+                            </div>
+                            <div class="form-row">
+                                <label>付款方式</label>
+                                <select id="paymentMethod">
+                                    <option value="现金">现金</option>
+                                    <option value="银行转账">银行转账</option>
+                                    <option value="微信">微信支付</option>
+                                    <option value="支付宝">支付宝</option>
+                                    <option value="刷卡">刷卡</option>
+                                    <option value="分期">分期付款</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>销售人员</label>
+                                <input type="text" id="salesperson" placeholder="销售人员姓名" required>
+                            </div>
+                            <div class="form-row">
+                                <label>发货方式</label>
+                                <select id="shippingMethod">
+                                    <option value="自提">客户自提</option>
+                                    <option value="快递">快递配送</option>
+                                    <option value="专人配送">专人配送</option>
+                                    <option value="物流">物流运输</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>保价金额</label>
+                                <input type="number" id="insurance" placeholder="艺术品保价">
+                                <span class="unit">元</span>
+                            </div>
+                            <div class="form-row">
+                                <label>备注</label>
+                                <textarea id="salesRemark" rows="2" placeholder="特殊说明、包装要求等"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label>证书编号</label>
+                                <input type="text" id="certNo" placeholder="收藏证书编号">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">确认销售</button>
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card list-card">
+                        <h3>销售记录</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>销售单号</th>
+                                        <th>产品</th>
+                                        <th>客户</th>
+                                        <th>价格</th>
+                                        <th>销售人员</th>
+                                        <th>日期</th>
+                                        <th>溯源</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="salesList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card timeline-card">
+                        <h3>工艺记录时间轴</h3>
+                        <div class="timeline" id="timeline">
+                            <div class="timeline-empty">
+                                <p>选择销售记录或查询产品溯源，查看完整工艺时间轴</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card stats-card">
+                        <h3>销售统计</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item total">
+                                <span class="stat-label">总销售额</span>
+                                <span class="stat-value" id="totalSales">0</span>
+                                <span class="stat-unit">元</span>
+                            </div>
+                            <div class="stat-item count">
+                                <span class="stat-label">销售数量</span>
+                                <span class="stat-value" id="salesCount">0</span>
+                                <span class="stat-unit">件</span>
+                            </div>
+                            <div class="stat-item avg">
+                                <span class="stat-label">均价</span>
+                                <span class="stat-value" id="avgPrice">0</span>
+                                <span class="stat-unit">元</span>
+                            </div>
+                            <div class="stat-item top">
+                                <span class="stat-label">最高单价</span>
+                                <span class="stat-value" id="maxSales">0</span>
+                                <span class="stat-unit">元</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>景德镇瓷器制作管理系统 © 2026 · 传承千年匠心工艺</p>
+        </footer>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">详情</h3>
+                <span class="modal-close" id="modalClose">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
